@@ -26,15 +26,21 @@
     finit.tasks.remount-nix-store = {
       description = "remount the nix store in read only mode";
       runlevels = "S";
-      command = pkgs.writeShellApplication {
+      command = pkgs.writeTextFile {
         name = "remount-nix-store.sh";
-        runtimeInputs = [
-          config.programs.coreutils.package
-          pkgs.util-linux
-        ];
+        destination = "/bin/remount-nix-store.sh";
+        executable = true;
+        allowSubstitutes = true;
+        preferLocalBuild = false;
         text = ''
-          #!${pkgs.runtimeShell}
-
+          #!${config.environment.binsh}
+          set -e
+          export PATH="${
+            lib.makeBinPath [
+              config.programs.coreutils.package
+              pkgs.util-linux
+            ]
+          }:$PATH"
           # Make /nix/store a read-only bind mount to enforce immutability of
           # the Nix store.  Note that we can't use "chown root:nixbld" here
           # because users/groups might not exist yet.

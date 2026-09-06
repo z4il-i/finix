@@ -71,11 +71,11 @@ in
 
     # default user & group definitions
     users.users.root = {
-      uid = 0;
-      group = "root";
-      shell = pkgs.bashInteractive;
-      home = "/root";
-      createHome = true;
+      uid = lib.mkDefault 0;
+      group = lib.mkDefault "root";
+      shell = lib.mkDefault config.programs.dash.package;
+      home = lib.mkDefault "/root";
+      createHome = lib.mkDefault true;
     };
 
     users.users.nobody = {

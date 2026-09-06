@@ -34,7 +34,8 @@
       # nixos-enter and nixos-install depend on a systemd-tmpfiles implementation
       # see https://github.com/NixOS/nixpkgs/blob/80bdc1e5ce51f56b19791b52b2901187931f5353/pkgs/by-name/ni/nixos-enter/nixos-enter.sh#L108 for details
       (lib.lowPrio (
-        pkgs.writeShellScriptBin "systemd-tmpfiles" ''
+        pkgs.writeScriptBin "systemd-tmpfiles" ''
+          #!${config.environment.binsh}
           exec "${config.finit.package}/libexec/finit/tmpfiles" "$@"
         ''
       ))

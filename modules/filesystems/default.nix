@@ -131,7 +131,8 @@ let
           description = "Encrypted swap device on ${sw.device}";
           runlevels = "S";
           command = toString (
-            pkgs.writeShellScript name ''
+            pkgs.writeScript name ''
+              #!${config.environment.binsh}
               set -eu
               ${pkgs.cryptsetup}/bin/cryptsetup plainOpen \
                 -c ${lib.escapeShellArg re.cipher} \

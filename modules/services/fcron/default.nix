@@ -94,8 +94,8 @@ in
         options = {
           shell = lib.mkOption {
             type = lib.types.path;
-            default = lib.getExe pkgs.bash;
-            defaultText = lib.literalExpression "lib.getExe pkgs.bash";
+            default = config.environment.binsh;
+            defaultText = lib.literalExpression "config.environment.binsh";
             description = ''
               Location of default shell called by `fcron` when running a job. When `fcron` runs a job, `fcron` uses the
               value of `SHELL` from the `fcrontab` if any, otherwise it uses the value from `fcron.conf` if any, or in

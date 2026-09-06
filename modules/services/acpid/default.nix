@@ -51,7 +51,7 @@ in
           lib.nameValuePair "acpi/events/${k}" {
             text = ''
               event=${v.event}
-              action=${pkgs.writeShellScriptBin "${k}.sh" v.action}/bin/${k}.sh '%e'
+              action=${pkgs.writeScriptBin "${k}.sh" v.action}/bin/${k}.sh '%e'
             '';
           }
         ) (lib.filterAttrs (_: v: v.enable) config.services.acpid.handlers);

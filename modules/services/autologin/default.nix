@@ -34,7 +34,8 @@ in
         Command to execute once {option}`user` is logged in on `tty1`.
       '';
       example = lib.literalExpression ''
-        pkgs.writeShellScript "autologin.sh" '''
+        pkgs.writeScript "autologin.sh" '''
+          #!${config.environment.binsh}
           exec ''${pkgs.dbus}/bin/dbus-run-session -- ''${lib.getExe pkgs.labwc}
         '''
       '';

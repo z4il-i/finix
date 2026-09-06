@@ -44,62 +44,68 @@ in
       description = "incus container hypervisor";
       conditions = "service/syslogd/ready";
 
-      command = pkgs.writeShellApplication {
+      command = pkgs.writeTextFile {
         name = "incusd";
-        runtimeEnv = {
-          INCUS_USBIDS_PATH = "${pkgs.hwdata}/share/hwdata/usb.ids";
-        };
-        runtimeInputs = with pkgs; [
-          cfg.package
+        executable = true;
+        destination = "/bin/incusd";
+        allowSubstitutes = true;
+        preferLocalBuild = false;
 
-          qemu_kvm
+        text = ''
+          #!${config.environment.binsh}
+          set -e
+          export PATH="${
+            with pkgs;
+            lib.makeBinPath [
+              cfg.package
 
-          acl
-          attr
-          bash
-          btrfs-progs
-          cdrkit
-          config.programs.coreutils.package
-          criu
-          dnsmasq
-          e2fsprogs
-          findutils
-          getent
-          gnugrep
-          gnused
-          gnutar
-          gptfdisk
-          gzip
-          iproute2
-          iptables
-          iw
-          kmod
-          libnvidia-container
-          libxfs
-          lvm2
-          lxcfs
-          minio
-          minio-client
-          nftables
-          qemu-utils
-          qemu_kvm
-          rsync
-          squashfs-tools-ng
-          squashfsTools
-          sshfs
-          swtpm
-          thin-provisioning-tools
-          util-linux
-          virtiofsd
-          xdelta
-          xz
+              qemu_kvm
 
-          zfs
-        ];
+              acl
+              attr
+              btrfs-progs
+              cdrkit
+              config.programs.coreutils.package
+              criu
+              dnsmasq
+              e2fsprogs
+              findutils
+              getent
+              gnugrep
+              gnused
+              gnutar
+              gptfdisk
+              gzip
+              iproute2
+              iptables
+              iw
+              kmod
+              libnvidia-container
+              libxfs
+              lvm2
+              lxcfs
+              minio
+              minio-client
+              nftables
+              qemu-utils
+              qemu_kvm
+              rsync
+              squashfs-tools-ng
+              squashfsTools
+              sshfs
+              swtpm
+              thin-provisioning-tools
+              util-linux
+              virtiofsd
+              xdelta
+              xz
 
-        text =
-          "exec ${cfg.package}/bin/incusd --group incus-admin --syslog"
-          + lib.optionalString cfg.debug " --debug";
+              zfs
+            ]
+          }:$PATH"
+          export INCUS_USBIDS_PATH="${pkgs.hwdata}/share/hwdata/usb.ids";
+          exec ${cfg.package}/bin/incusd --group incus-admin --syslog
+        '' + lib.optionalString cfg.debug " --debug";
       };
 
       kill = 30;

@@ -144,7 +144,8 @@ in
         zfs-scrub = {
           inherit (cfg.autoScrub) interval;
 
-          command = pkgs.writeShellScript "zfs-scrub.sh" ''
+          command = pkgs.writeScript "zfs-scrub.sh" ''
+            #!${config.environment.binsh}
             ${pkgs.zfs}/bin/zpool scrub -w ${
               if cfg.autoScrub.pools != [ ] then
                 (lib.concatStringsSep " " cfg.autoScrub.pools)

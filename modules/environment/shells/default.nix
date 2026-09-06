@@ -20,37 +20,38 @@ let
   );
 in
 {
-  options.environment.shells = lib.mkOption {
-    type = with lib.types; listOf (either shellPackage path);
-    default = [ ];
-  };
+  options.environment = {
+    shells = lib.mkOption {
+      type = with lib.types; listOf (either shellPackage path);
+      default = [ ];
+    };
+    variables = lib.mkOption {
+      type = lib.types.attrsOf (
+        lib.types.nullOr (lib.types.coercedTo atom lib.singleton (lib.types.listOf atom))
+      );
+      default = { };
+      apply = lib.mapAttrs (
+        _: value: if value == null then null else lib.concatMapStringsSep ":" toStr value
+      );
+      description = ''
+        Environment variables to set for POSIX-compliant login shells (bash, zsh,
+        dash, ...) via {file}`/etc/profile.d/`. Shells with non-POSIX syntax,
+        such as `fish`, do not source these scripts and will not pick up these
+        variables.
 
-  options.environment.variables = lib.mkOption {
-    type = lib.types.attrsOf (
-      lib.types.nullOr (lib.types.coercedTo atom lib.singleton (lib.types.listOf atom))
-    );
-    default = { };
-    apply = lib.mapAttrs (
-      _: value: if value == null then null else lib.concatMapStringsSep ":" toStr value
-    );
-    description = ''
-      Environment variables to set for POSIX-compliant login shells (bash, zsh,
-      dash, ...) via {file}`/etc/profile.d/`. Shells with non-POSIX syntax,
-      such as `fish`, do not source these scripts and will not pick up these
-      variables.
+        The value of each variable can be a string, a path, an integer, or a
+        list of those, in which case the list is joined with `:`.
 
-      The value of each variable can be a string, a path, an integer, or a
-      list of those, in which case the list is joined with `:`.
-
-      Setting a variable to `null` does not set anything on its own, but lets
-      you override a value set by another module to effectively cancel it out.
-    '';
-    example = {
-      EDITOR = "nvim";
-      XDG_DATA_DIRS = [
-        "/usr/share"
-        "/usr/local/share"
-      ];
+        Setting a variable to `null` does not set anything on its own, but lets
+        you override a value set by another module to effectively cancel it out.
+      '';
+      example = {
+        EDITOR = "nvim";
+        XDG_DATA_DIRS = [
+          "/usr/share"
+          "/usr/local/share"
+        ];
+      };
     };
   };
 

@@ -130,7 +130,8 @@ in
           else
             v;
 
-        script = pkgs.writeShellScript "nzbget.sh" ''
+        script = pkgs.writeScript "nzbget.sh" ''
+          #!${config.environment.binsh}
           exec ${lib.getExe cfg.package} --configfile ${configFile} ${configOpts} "$@"
         '';
       in
@@ -143,7 +144,8 @@ in
         stop = "${script} --quit";
         reload = "${script} --reload";
 
-        pre = pkgs.writeShellScript "nzbget-pre.sh" ''
+        pre = pkgs.writeScript "nzbget-pre.sh" ''
+          #!${config.environment.binsh}
           if [ ! -f ${configFile} ]; then
             ${lib.getExe' config.programs.coreutils "install"} -o ${cfg.user} -g ${cfg.group} -m 0700 ${cfg.package}/share/nzbget/nzbget.conf ${configFile}
           fi

@@ -1,4 +1,4 @@
-#!@bash@/bin/bash
+#!@shell@
 set -euo pipefail
 
 out="@out@"

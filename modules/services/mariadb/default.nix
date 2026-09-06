@@ -120,14 +120,23 @@ in
       description = "mariadb database init";
       log = true;
 
-      command = pkgs.writeShellApplication {
+      command = pkgs.writeTextFile {
         name = "mariadb-init.sh";
-        runtimeInputs = [
-          config.programs.coreutils.package
-          pkgs.nettools
-          pkgs.gnused
-        ];
+        allowSubstitutes = true;
+        preferLocalBuild = false;
+        executable = true;
+        destination = "/bin/mariadb-init.sh";
         text = ''
+          #!${config.environment.binsh}
+          set -e
+          export PATH="${
+            with pkgs;
+            lib.makeBinPath [
+              config.programs.coreutils.package
+              nettools
+              gnused
+            ]
+          }:$PATH"
           if ! test -e '${cfg.dataDir}/mysql'; then
             ${cfg.package}/bin/mysql_install_db --defaults-file=/etc/my.cnf ${mysqldOptions}
             touch '${cfg.dataDir}/mysql_init'

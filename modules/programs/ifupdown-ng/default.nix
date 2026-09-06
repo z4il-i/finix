@@ -204,7 +204,8 @@ in
       command =
         "${cfg.package}/bin/ifup -E ${cfg.package}/libexec/ifupdown-ng "
         + lib.escapeShellArgs cfg.extraArgs;
-      post = pkgs.writeShellScript "ifdown.sh" ''
+      post = pkgs.writeScript "ifdown.sh" ''
+        #!${config.environment.binsh}
         ${cfg.package}/bin/ifdown -E ${cfg.package}/libexec/ifupdown-ng ${lib.escapeShellArgs cfg.extraArgs}
       '';
       conditions = [

@@ -173,7 +173,8 @@ let
     opts: if opts.capabilities != "" then mkSetcapProgram opts else mkSetuidProgram opts
   ) (lib.attrValues (lib.filterAttrs (_: wrapper: wrapper.enable) wrappers));
 
-  wrappersScript = pkgs.writeShellScript "suid-sgid-wrappers.sh" ''
+  wrappersScript = pkgs.writeScript "suid-sgid-wrappers.sh" ''
+    #!${config.environment.binsh}
     set -e
 
     chmod 755 "${parentWrapperDir}"

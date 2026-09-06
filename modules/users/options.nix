@@ -190,8 +190,8 @@ in
 
     users.defaultUserShell = lib.mkOption {
       type = with lib.types; either shellPackage (passwdEntry path);
-      default = pkgs.bashInteractive;
-      defaultText = lib.literalExpression "pkgs.bashInteractive";
+      default = config.programs.dash.package;
+      defaultText = lib.literalExpression "config.programs.dash.package";
       example = lib.literalExpression "pkgs.zsh";
       description = ''
         The default shell assigned to user accounts created with

@@ -7,10 +7,16 @@
 let
   empty = pkgs.writeText "no-inhibitors" "{}";
 
-  checkSwitchInhibitors = pkgs.writeShellApplication {
+  checkSwitchInhibitors = pkgs.writeTextFile {
     name = "check-switch-inhibitors";
-    runtimeInputs = [ pkgs.jq ];
+    executable = true;
+    destination = "/bin/check-switch-inhibitors";
+    allowSubstitutes = true;
+    preferLocalBuild = false;
     text = ''
+      #!${config.environment.binsh}
+      set -e
+      export PATH="${ lib.makeBinPath [ pkgs.jq ] }:$PATH"
       incoming="$1"
 
       exec >&2

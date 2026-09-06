@@ -20,11 +20,13 @@ in
 
   options.system.installBootLoader = lib.mkOption {
     internal = true;
-    default = pkgs.writeShellScript "no-bootloader" ''
+    default = pkgs.writeScript "no-bootloader" ''
+      #!${config.environment.binsh}
       echo 'Warning: do not know how to make this configuration bootable; please enable a boot loader.' 1>&2
     '';
     defaultText = lib.literalExpression ''
-      pkgs.writeShellScript "no-bootloader" '''
+      pkgs.writeScript "no-bootloader" '''
+      #!${config.environment.binsh}
         echo 'Warning: do not know how to make this configuration bootable; please enable a boot loader.' 1>&2
       '''
     '';

@@ -128,7 +128,7 @@ in
       notify = "systemd";
       cgroup.name = "system";
 
-      pre = pkgs.writeShellScript "dbus-pre.sh" "${cfg.package}/bin/dbus-uuidgen --ensure";
+      pre = pkgs.writeScript "dbus-pre.sh" "${cfg.package}/bin/dbus-uuidgen --ensure";
       environment = {
         DBUS_VERBOSE = lib.mkIf cfg.debug 1;
       };

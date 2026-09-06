@@ -51,8 +51,8 @@ in
         options = {
           SHELL = lib.mkOption {
             type = lib.types.path;
-            default = lib.getExe pkgs.bash;
-            defaultText = lib.literalExpression "lib.getExe pkgs.bash";
+            default = config.environment.binsh;
+            defaultText = lib.literalExpression "config.environment.binsh";
             description = ''
               The shell used to execute commands.
             '';

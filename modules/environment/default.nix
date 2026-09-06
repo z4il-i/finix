@@ -13,8 +13,8 @@ in
 
   options.environment.binsh = lib.mkOption {
     type = lib.types.path;
-    default = "${pkgs.bashInteractive}/bin/sh";
-    defaultText = lib.literalExpression ''"''${pkgs.bashInteractive}/bin/sh"'';
+    default = lib.getExe pkgs.dash;
+    defaultText = lib.literalExpression ''lib.getExe pkgs.dash'';
     example = lib.literalExpression ''"''${pkgs.dash}/bin/dash"'';
     description = ''
       Default shell linked system-wide to `/bin/sh`. Do your best to make sure any

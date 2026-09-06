@@ -17,7 +17,8 @@ let
     mode: k: v:
     let
       name = "zzz.d/${zeroPad 4 v.priority}-${k}.sh";
-      script = pkgs.writeShellScript k ''
+      script = pkgs.writeScript k ''
+        #!${config.environment.binsh}
         [ "''${ZZZ_MODE:-}" = "${mode}" ] || exit 0
         [ "$1" = "pre" ] || exit 0
         ${v.action}
@@ -29,7 +30,8 @@ let
     k: v:
     let
       name = "zzz.d/${zeroPad 4 v.priority}-${k}.sh";
-      script = pkgs.writeShellScript k ''
+      script = pkgs.writeScript k ''
+        #!${config.environment.binsh}
         [ "$1" = "post" ] || exit 0
         ${v.action}
       '';

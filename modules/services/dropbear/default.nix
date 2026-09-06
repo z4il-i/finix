@@ -132,7 +132,7 @@ in
             fi
           '') config.services.dropbear.hostKeys;
         in
-        pkgs.writeShellScript "ssh-keygen.sh" script;
+        pkgs.writeScript "ssh-keygen.sh" script;
     };
 
     finit.services.dropbear = {

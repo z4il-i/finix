@@ -32,35 +32,12 @@
 
   config = {
     environment.systemPackages = with pkgs; [
-      acl
-      attr
       bzip2
       cpio
-      curl
-      diffutils
-      findutils
-      getent
-      getconf
-      gzip
-      xz
-      less
-      libcap
       ncurses
-      netcat
-      mkpasswd
-      procps
-      su
-      time
       util-linux
-      which
+      su
       zstd
-
-      bashInteractive
-      gawk
-      gnugrep
-      gnupatch
-      gnused
-      gnutar
     ];
 
     environment.pathsToLink = [

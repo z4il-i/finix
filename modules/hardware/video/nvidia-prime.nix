@@ -157,7 +157,8 @@ in
 
     environment.systemPackages =
       let
-        script = pkgs.writeShellScriptBin "nvidia-offload" ''
+        script = pkgs.writeScriptBin "nvidia-offload" ''
+          #!${config.environment.binsh}
           export __NV_PRIME_RENDER_OFFLOAD=1
           export __NV_PRIME_RENDER_OFFLOAD_PROVIDER=NVIDIA-G0
           export __GLX_VENDOR_LIBRARY_NAME=nvidia

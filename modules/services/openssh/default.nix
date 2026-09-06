@@ -301,7 +301,8 @@ in
     finit.tasks.ssh-keygen = {
       description = "generate ssh host keys";
       log = true;
-      command = pkgs.writeShellScript "ssh-keygen.sh" ''
+      command = pkgs.writeScript "ssh-keygen.sh" ''
+        #!${config.environment.binsh}
         if ! [ -s "/var/lib/sshd/ssh_host_ed25519_key" ]; then
           ${cfg.package}/bin/ssh-keygen -t ed25519 -f "/var/lib/sshd/ssh_host_ed25519_key" -N ""
         fi

@@ -124,7 +124,7 @@ in
         target = "/etc/tmpfiles.d/finix.conf";
         source = pkgs.writeText "finix.conf" ''
           d /sysroot
-          d /tmp
+          d /tmp 1777 root root
         '';
       }
       {
