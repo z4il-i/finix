@@ -52,8 +52,8 @@ in
   config = lib.mkIf cfg.enable {
     environment.systemPackages = [ cfg.package ];
     environment.shells = [
-      "/run/current-system/sw/bin/bash"
-      (lib.getExe cfg.package)
+      "/run/current-system/sw${cfg.package.shellPath}"
+      "${cfg.package}${cfg.package.shellPath}"
     ];
 
     environment.etc."profile.d/bash.sh".text = ''

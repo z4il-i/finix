@@ -11,15 +11,13 @@ let
       "${lib.getExe cfg.wrapper.package} ${cfg.wrapper.extraArgs} ${lib.getExe pkgs.dash}"
     else
       lib.getExe pkgs.dash;
-  dashInteractive = pkgs.writeScriptBin "dash-login" ''
-    #!${config.environment.binsh}
-    exec ${dashCommand} -il
-  '';
-  dashInteractiveShell = dashInteractive.overrideAttrs (old: {
-    passthru = (old.passthru or {}) // {
-      shellPath = "/bin/dash-login";
+    dashInteractive = pkgs.writeScriptBin "dashInteractive" ''
+      #!${config.environment.binsh}
+      exec ${dashCommand} -il
+    ''
+    // {
+        shellPath = "/bin/dashInteractive";
     };
-  });
 in
 {
   options.programs.dash = {
@@ -27,14 +25,13 @@ in
       type = lib.types.bool;
       default = false;
       description = ''
-        Whether to enable [dash](${pkgs.dash.meta.homepage}).
+        Whether to enable [dash](${pkgs.dash.meta.homepage}), ${pkgs.dash.meta.description}.
       '';
     };
 
     package = lib.mkOption {
-      type = lib.types.package;
-      default = dashInteractiveShell;
-      defaultText = lib.literalExpression "dashInteractiveShell";
+      type = lib.types.shellPackage;
+      default = dashInteractive;
       description = ''
         The package to use for `dash`.
       '';
@@ -113,8 +110,8 @@ in
   config = lib.mkIf cfg.enable {
     environment.systemPackages = [ cfg.package ];
     environment.shells = [
-      "/run/current-system/sw/bin/dash"
-      (lib.getExe cfg.package)
+      "/run/current-system/sw${cfg.package.shellPath}"
+      "${cfg.package}${cfg.package.shellPath}"
     ];
 
     environment.etc."profile.d/dash.sh".text = ''

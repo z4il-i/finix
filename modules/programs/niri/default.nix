@@ -35,6 +35,7 @@ let
 
     # since we're recompiling go ahead and disable systemd
     withSystemd = false;
+    withScreencastSupport = false;
   };
 in
 {
