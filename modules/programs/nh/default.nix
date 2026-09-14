@@ -15,18 +15,22 @@ in
 
     settings = lib.mkOption {
       type = lib.types.submodule {
-        freeformType = lib.types.attrsOf (lib.types.nullOr (lib.types.oneOf [
-          lib.types.str
-          lib.types.int
-          lib.types.bool
-          lib.types.path
-        ]));
+        freeformType = lib.types.attrsOf (
+          lib.types.nullOr (
+            lib.types.oneOf [
+              lib.types.str
+              lib.types.int
+              lib.types.bool
+              lib.types.path
+            ]
+          )
+        );
 
         options = {
           NH_FLAKE = lib.mkOption {
             type = lib.types.nullOr lib.types.str;
             default = null;
-            description = ''                
+            description = ''
               The string that will be used for the `NH_FLAKE` environment variable.
 
               `NH_FLAKE` is used by nh as the default flake for performing actions, such as
@@ -46,7 +50,7 @@ in
           NH_FILE = lib.mkOption {
             type = lib.types.nullOr lib.types.path;
             default = null;
-            description = ''                
+            description = ''
               The string that will be used for the `NH_FILE` environment variable.
 
               `NH_FILE` is used by nh as the default configuration file for performing actions, such as
@@ -57,7 +61,7 @@ in
           NH_ATTRP = lib.mkOption {
             type = lib.types.nullOr lib.types.str;
             default = null;
-            description = ''                
+            description = ''
               The string that will be used for the `NH_ATTRP` environment variable.
 
               `NH_ATTRP` is used by nh as the default attribute for performing actions, such as
@@ -85,10 +89,9 @@ in
 
     environment = lib.mkIf cfg.enable {
       systemPackages = [ cfg.package ];
-      variables =
-      lib.mapAttrs
-        (_: v: if builtins.isBool v then (if v then "1" else "0") else toString v)
-        (lib.filterAttrs (_: v: v != null) cfg.settings);
+      variables = lib.mapAttrs (
+        _: v: if builtins.isBool v then (if v then "1" else "0") else toString v
+      ) (lib.filterAttrs (_: v: v != null) cfg.settings);
     };
   };
 }

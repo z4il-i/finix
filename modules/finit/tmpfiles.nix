@@ -43,10 +43,10 @@
     finit.tasks.tmpfiles-setup.command = "${config.finit.package}/libexec/finit/tmpfiles --create";
 
     providers.scheduler.tasks.tmpfiles-clean = lib.mkIf config.finit.tmpfiles.clean.enable {
-        interval = config.finit.tmpfiles.clean.interval;
-        command = "${config.finit.package}/libexec/finit/tmpfiles --clean";
-      };
+      interval = config.finit.tmpfiles.clean.interval;
+      command = "${config.finit.package}/libexec/finit/tmpfiles --clean";
     };
-    # needed for finit tmpfiles Z implementation: pkgs.policycoreutils
-    # TODO: make this an optional dependency, fixup Z behaviour in general
+  };
+  # needed for finit tmpfiles Z implementation: pkgs.policycoreutils
+  # TODO: make this an optional dependency, fixup Z behaviour in general
 }

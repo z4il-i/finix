@@ -46,7 +46,7 @@ let
         targetPkgs =
           pkgs:
           with pkgs;
-          [            
+          [
             file
             # bashInteractiveFHS # Needed for the various shell scripts of steam
             lsb-release # not documented, called from Big Picture
@@ -81,11 +81,16 @@ let
 
             libcap # not documented, required by srt-bwrap
           ]
-          ++ (if config.services.gardendevd.enable or false then [
-            pkgs.gardendevd
-          ] else [
-            pkgs.libudev-zero
-          ])
+          ++ (
+            if config.services.gardendevd.enable or false then
+              [
+                pkgs.gardendevd
+              ]
+            else
+              [
+                pkgs.libudev-zero
+              ]
+          )
           ++ lib.optionals config.services.networkmanager.enable or false [
             networkmanager
             # not documented, used for network status things in Big Picture

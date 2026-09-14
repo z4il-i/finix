@@ -16,7 +16,7 @@ let
     text = ''
       #!${config.environment.binsh}
       set -e
-      export PATH="${ lib.makeBinPath [ pkgs.jq ] }:$PATH"
+      export PATH="${lib.makeBinPath [ pkgs.jq ]}:$PATH"
       incoming="$1"
 
       exec >&2

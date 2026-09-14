@@ -1,5 +1,5 @@
 #!@shell@
-set -euo pipefail
+set -eu
 
 out="@out@"
 localeArchive="@localeArchive@"
@@ -12,8 +12,9 @@ coreutils="@coreutils@"
 
 action="${1-}"
 
-# if [[ -n "$localeArchive" ]]; then
-#   export LOCALE_ARCHIVE="$localeArchive"
+# if [ -n "$localeArchive" ]; then
+#   LOCALE_ARCHIVE="$localeArchive"
+#   export LOCALE_ARCHIVE
 # fi
 
 case "$action" in
@@ -32,41 +33,41 @@ EOF
 esac
 
 # Verify this is a NixOS system
-if [[ ! -f /etc/NIXOS && ! "$(grep -E "^ID=\"?$distroId\"?" /etc/os-release 2>/dev/null || true)" ]]; then
+if [ ! -f /etc/NIXOS ] && [ -z "$(grep -E "^ID=\"?$distroId\"?" /etc/os-release 2>/dev/null || true)" ]; then
   echo "This is not a NixOS installation!" >&2
   exit 1
 fi
 
 # mkdir -p -m 755 /run/finix
-# 
+#
 # # Acquire lock
-# exec {lockfd}>/run/finix/switch-to-configuration.lock
-# if ! flock -n "$lockfd"; then
+# exec 9>/run/finix/switch-to-configuration.lock
+# if ! flock -n 9; then
 #   echo "Could not acquire lock" >&2
 #   exit 1
 # fi
 
 "$logger/bin/logger" -t finix "starting switch-to-configuration ($action)"
 
-if [[ "$action" != boot && "${NIXOS_NO_CHECK-}" != 1 ]]; then
+if [ "$action" != boot ] && [ "${NIXOS_NO_CHECK-}" != 1 ]; then
   if ! "$inhibitCheck" "$out"; then
     exit 1
   fi
 fi
 
 # install bootloader
-if [[ "$action" == switch || "$action" == boot ]]; then
+if [ "$action" = switch ] || [ "$action" = boot ]; then
   if ! "$installHook" "$out"; then
     exit 1
   fi
 fi
 
 # sync filesystem
-if [[ "${NIXOS_NO_SYNC-}" != 1 ]]; then
+if [ "${NIXOS_NO_SYNC-}" != 1 ]; then
   "$coreutils/bin/sync" -f /nix/store || true
 fi
 
-if [[ "$action" == boot ]]; then
+if [ "$action" = boot ]; then
   exit 0
 fi
 
@@ -80,10 +81,12 @@ fi
 
 # Ask finit (or equivalent) to reload its units
 if ! "$finit/bin/initctl" reload; then
-  (( res == 0 )) && res=3
+  if [ "$res" -eq 0 ]; then
+    res=3
+  fi
 fi
 
-if (( res == 0 )); then
+if [ "$res" -eq 0 ]; then
   "$logger/bin/logger" -t finix "finished switching to system configuration $out"
 else
   "$logger/bin/logger" -t finix -p user.err "switching to system configuration $out failed (status $res)"

@@ -33,13 +33,16 @@ stdenv.mkDerivation (finalAttrs: {
     rm $out/share/applications/steam.desktop
     substitute steam.desktop $out/share/applications/steam.desktop \
       --replace-fail /usr/bin/steam steam
-    ${lib.optionalString (!(config.services.mdevd.enable or false) && !(config.services.mdev.enable or false)) ''
-      # install udev rules
-      mkdir -p $out/etc/udev/rules.d/
-      cp ./subprojects/steam-devices/*.rules $out/etc/udev/rules.d/
-      substituteInPlace $out/etc/udev/rules.d/60-steam-input.rules \
-        --replace-fail "/bin/sh" "${config.environment.binsh}"
-    ''}
+    ${lib.optionalString
+      (!(config.services.mdevd.enable or false) && !(config.services.mdev.enable or false))
+      ''
+        # install udev rules
+        mkdir -p $out/etc/udev/rules.d/
+        cp ./subprojects/steam-devices/*.rules $out/etc/udev/rules.d/
+        substituteInPlace $out/etc/udev/rules.d/60-steam-input.rules \
+          --replace-fail "/bin/sh" "${config.environment.binsh}"
+      ''
+    }
   '';
 
   passthru.updateScript = ./update.py;

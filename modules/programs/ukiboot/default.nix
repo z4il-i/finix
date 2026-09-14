@@ -26,7 +26,8 @@ let
         kernelOutput = "Image";
       };
     }
-    .${pkgs.stdenv.hostPlatform.system} or (throw "programs.ukiboot: unsupported system ${pkgs.stdenv.hostPlatform.system}");
+    .${pkgs.stdenv.hostPlatform.system}
+      or (throw "programs.ukiboot: unsupported system ${pkgs.stdenv.hostPlatform.system}");
 
   uncompressedInitrd = pkgs.makeInitrdNG {
     name = "ukiboot-initrd";
@@ -70,13 +71,13 @@ let
 in
 {
   options.programs.ukiboot = {
-      enable = lib.mkOption {
-        type = lib.types.bool;
-        default = false;
-        description = ''
-          Whether to enable ukiboot or not
-        '';
-      };
+    enable = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = ''
+        Whether to enable ukiboot or not
+      '';
+    };
 
     efiMountPoint = lib.mkOption {
       type = lib.types.str;

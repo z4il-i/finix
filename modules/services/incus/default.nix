@@ -105,7 +105,8 @@ in
           }:$PATH"
           export INCUS_USBIDS_PATH="${pkgs.hwdata}/share/hwdata/usb.ids";
           exec ${cfg.package}/bin/incusd --group incus-admin --syslog
-        '' + lib.optionalString cfg.debug " --debug";
+        ''
+        + lib.optionalString cfg.debug " --debug";
       };
 
       kill = 30;

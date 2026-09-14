@@ -26,7 +26,7 @@ in
       '';
     };
     interactiveShellInit = lib.mkOption {
-      default =''
+      default = ''
         # Provide a nice prompt if the terminal supports it.
         if [ "$TERM" != "dumb" ] || [ -n "$INSIDE_EMACS" ]; then
           PROMPT_COLOR="1;31m"

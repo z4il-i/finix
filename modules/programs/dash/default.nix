@@ -11,12 +11,13 @@ let
       "${lib.getExe cfg.wrapper.package} ${cfg.wrapper.extraArgs} ${lib.getExe pkgs.dash}"
     else
       lib.getExe pkgs.dash;
-    dashInteractive = pkgs.writeScriptBin "dashInteractive" ''
+  dashInteractive =
+    pkgs.writeScriptBin "dashInteractive" ''
       #!${config.environment.binsh}
       exec ${dashCommand} -il
     ''
     // {
-        shellPath = "/bin/dashInteractive";
+      shellPath = "/bin/dashInteractive";
     };
 in
 {
@@ -62,7 +63,7 @@ in
       };
     };
     interactiveShellInit = lib.mkOption {
-      default =''
+      default = ''
         # Provide a nice prompt if the terminal supports it.
         prompt() {
             color='1;31m'

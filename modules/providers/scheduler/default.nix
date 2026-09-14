@@ -1,4 +1,5 @@
-{ lib,
+{
+  lib,
   config,
   ...
 }:
@@ -81,10 +82,12 @@ in
       '';
     };
   };
-  config.warnings = lib.optional (config.providers.scheduler.tasks != { } && config.providers.scheduler.backend == "none")
-    ''
-    `providers.scheduler.backend` is `"none"`, but the following tasks are defined:
-    ${lib.concatStringsSep ", " (lib.attrNames config.providers.scheduler.tasks)}
-    Select a backend implementation to use scheduled tasks.
-    '';
+  config.warnings =
+    lib.optional
+      (config.providers.scheduler.tasks != { } && config.providers.scheduler.backend == "none")
+      ''
+        `providers.scheduler.backend` is `"none"`, but the following tasks are defined:
+        ${lib.concatStringsSep ", " (lib.attrNames config.providers.scheduler.tasks)}
+        Select a backend implementation to use scheduled tasks.
+      '';
 }
