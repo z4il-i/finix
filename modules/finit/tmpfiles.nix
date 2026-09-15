@@ -3,6 +3,9 @@
   lib,
   ...
 }:
+let
+  cfg = config.finit.tmpfiles;
+in
 {
   options.finit.tmpfiles = {
     rules = lib.mkOption {
@@ -15,12 +18,31 @@
       '';
     };
     clean = {
-      enable = lib.mkEnableOption "Whether to enable automatic tmpfile cleaning which relies on `providers.scheduler.backend` to be set`";
+      enable = lib.mkOption {
+        type = lib.types.bool;
+        default = false;
+        description = ''
+          Whether to enable automatic cleaning of temporary files.
+
+          :::{.note}
+          You must have a scheduler backend configured with
+          `providers.scheduler.backend` to utilize this option.
+          :::
+        '';
+      };
+
       interval = lib.mkOption {
-        type = lib.types.singleLineStr;
+        type = lib.types.str;
         default = "daily";
         description = ''
-          How often cleanup is performed. Passed to `providers.scheduler`
+          The interval at which this task should run its specified {option}`command`. Accepts either a
+          standard {manpage}`crontab(5)` expression or one of: `hourly`, `daily`, `weekly`, `monthly`, or `yearly`.
+
+          If a standard {manpage}`crontab(5)` expression is provided this value will be passed directly
+          to the `scheduler` implementation and execute exactly as specified.
+
+          If one of the special values, `hourly`, `daily`, `monthly`, `weekly`, or `yearly`, is provided then the
+          underlying `scheduler` implementation will use its features to decide when best to run.
         '';
       };
     };
@@ -42,9 +64,11 @@
 
     finit.tasks.tmpfiles-setup.command = "${config.finit.package}/libexec/finit/tmpfiles --create";
 
-    providers.scheduler.tasks.tmpfiles-clean = lib.mkIf config.finit.tmpfiles.clean.enable {
-      interval = config.finit.tmpfiles.clean.interval;
-      command = "${config.finit.package}/libexec/finit/tmpfiles --clean";
+    providers.scheduler.tasks = lib.mkIf cfg.clean.enable {
+      tmpfiles-clean = {
+        interval = cfg.clean.interval;
+        command = "${config.finit.package}/libexec/finit/tmpfiles --clean";
+      };
     };
   };
   # needed for finit tmpfiles Z implementation: pkgs.policycoreutils

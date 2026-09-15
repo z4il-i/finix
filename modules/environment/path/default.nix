@@ -49,15 +49,9 @@
       "/lib" # FIXME: remove and update debug-info.nix
       "/sbin"
 
-      # TODO: trim this list down
-      "/share/emacs"
-      "/share/hunspell"
-      "/share/org"
+      # TODO: trim this list down?
       "/share/themes"
       "/share/vulkan"
-      "/share/kservices5"
-      "/share/kservicetypes5"
-      "/share/kxmlgui5"
       "/share/thumbnailers"
       "/share/wayland-sessions"
     ];

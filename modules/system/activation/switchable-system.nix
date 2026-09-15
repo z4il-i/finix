@@ -14,7 +14,7 @@ let
     allowSubstitutes = true;
     preferLocalBuild = false;
     text = ''
-      #!${config.environment.binsh}
+      #!${lib.getExe config.programs.sh.package}
       set -e
       export PATH="${lib.makeBinPath [ pkgs.jq ]}:$PATH"
       incoming="$1"

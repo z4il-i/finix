@@ -81,7 +81,7 @@ in
 
     finit.tasks.modprobe = {
       command = pkgs.writeScript "load-kernel-modules" ''
-        #!${config.environment.binsh}
+        #!${lib.getExe config.programs.sh.package}
         ${lib.getExe' pkgs.kmod "modprobe"} -a ${lib.escapeShellArgs config.boot.kernelModules}
       '';
       runlevels = "S12345789";

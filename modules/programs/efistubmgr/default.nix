@@ -8,7 +8,7 @@ let
   cfg = config.programs.efistubmgr;
   ESP_REL_DIR = "${lib.removePrefix "/" (lib.removePrefix cfg.efiMountPoint cfg.bootDir)}";
   efistubHook = pkgs.writeScript "efistub-install" ''
-    #!${config.environment.binsh}
+    #!${lib.getExe config.programs.sh.package}
     set -euo pipefail
 
     # ── Paths & metadata ──────────────────────────────────────────────────────

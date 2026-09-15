@@ -174,7 +174,7 @@ let
   ) (lib.attrValues (lib.filterAttrs (_: wrapper: wrapper.enable) wrappers));
 
   wrappersScript = pkgs.writeScript "suid-sgid-wrappers.sh" ''
-    #!${config.environment.binsh}
+    #!${lib.getExe config.programs.sh.package}
     set -e
 
     chmod 755 "${parentWrapperDir}"

@@ -195,7 +195,7 @@ in
             cp ${../../finit/switch-to-configuration.sh} $out/bin/switch-to-configuration
             substituteInPlace $out/bin/switch-to-configuration \
               --subst-var out \
-              --subst-var-by shell ${config.environment.binsh} \
+              --subst-var-by bash #!${pkgs.bash} \
               --subst-var-by distroId finix \
               --subst-var-by finit ${config.finit.package} \
               --subst-var-by logger ${pkgs.util-linuxMinimal} \
